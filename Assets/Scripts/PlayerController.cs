@@ -355,11 +355,11 @@ public class PlayerController : MonoBehaviour
         {
             if (pState.LookingRight)
             {
-                rb.linearVelocity = new Vector2(-RecoilXSpeed, 0);
+                rb.linearVelocity = new Vector2(RecoilXSpeed, 0);
             }
             else
             {
-                rb.linearVelocity = new Vector2(RecoilXSpeed, 0);
+                rb.linearVelocity = new Vector2(-RecoilXSpeed, 0);
             }
         }
 

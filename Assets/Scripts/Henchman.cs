@@ -21,6 +21,7 @@ public class Henchman : Enemy
                 (transform.position, new Vector2(PlayerController.Instance.transform.position.x, transform.position.y),
                 speed * Time.deltaTime);
         }
+  
     }
     public override void EnemyHit(float _DamageDone, Vector2 _HitDirection, float _HitForce)
     {

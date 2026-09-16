@@ -27,31 +27,33 @@ public class Enemy : MonoBehaviour
 
     // Update is called once per frame
     protected virtual void Update()
+{
+    if (health <= 0)
     {
-        if (health <= 0)
+        Destroy(gameObject);
+    }
+    if (isRecoiling)
+    {
+        if (RecoilTimer < RecoilLength)
         {
-            Destroy(gameObject);
+            RecoilTimer += Time.deltaTime;
         }
-        if (isRecoiling)
+        else
         {
-            if (RecoilTimer < RecoilLength)
-            {
-                RecoilTimer += Time.deltaTime;
-            }
-            else
-            {
-                isRecoiling = false;
-                RecoilTimer = 0;
-            }
+            isRecoiling = false;
+            RecoilTimer = 0;
+            rb.linearVelocity = Vector2.zero;
         }
     }
+}
+    
     public virtual void EnemyHit(float _DamageDone, Vector2 _HitDirection, float _HitForce)
     {
         health -= _DamageDone;
         if(!isRecoiling)
         {
             rb.AddForce(-_HitForce * RecoilFactor * _HitDirection);
-            //isRecoiling = true;
+            isRecoiling = true;
         }
     }
     protected void OnTriggerStay2D(Collider2D _Other)
@@ -66,4 +68,5 @@ public class Enemy : MonoBehaviour
         {
         PlayerController.Instance.TakeDamage(Damage);
     }
+
 }
