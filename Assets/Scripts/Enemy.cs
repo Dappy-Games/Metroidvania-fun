@@ -65,7 +65,9 @@ public class Enemy : MonoBehaviour
         }
     }
     protected virtual void Attack()
-        {
+    {
+        Vector2 direction = (PlayerController.Instance.transform.position - transform.position).normalized;
+        PlayerController.Instance.TakeRecoil(direction);
         PlayerController.Instance.TakeDamage(Damage);
     }
 

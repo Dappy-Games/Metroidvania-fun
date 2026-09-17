@@ -60,6 +60,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float RecoilYSpeed = 100;
     private int StepsXRecoiled, StepsYRecoiled;
     [SerializeField] private float WallRecoilForce = 10f;
+    [SerializeField] private float recoilLength = 0.2f;
+    [SerializeField] private float recoilHorizontal = 5f;
+    [SerializeField] private float recoilVertical = 4f;
+    private bool isRecoiling = false;
+    private float recoilTimer = 0f;
     [Space(5)]
 
     [Header("Health Settings:")]
@@ -150,9 +155,25 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        RestoreTimeScale();
+        FlashWhileInvincible();
         if (Input.GetKeyDown(KeyCode.F))
         {
             Debug.Log("F KEY PRESSED!");
+        }
+
+        if (isRecoiling)
+        {
+            recoilTimer += Time.deltaTime;
+
+            if (recoilTimer >= recoilLength)
+            {
+                isRecoiling = false;
+                recoilTimer = 0f;
+                rb.linearVelocity = Vector2.zero;
+            }
+
+            return;
         }
         GetInputs();
         UpdateJumpVariables();
@@ -161,8 +182,6 @@ public class PlayerController : MonoBehaviour
         Move();
         Jump();
         Attack();
-        RestoreTimeScale();
-        FlashWhileInvincible();
         Heal();
         CastSpell();
     }
@@ -204,7 +223,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Move()
     {
-        if (!pState.Dashing)  // <-- Add this check
+        if (!pState.Dashing && !isRecoiling)  // <-- Add this check
         {
             rb.linearVelocity = new Vector2(walkSpeed * xAxis, rb.linearVelocity.y);
             anim.SetBool("Walking", rb.linearVelocity.x != 0 && Grounded());
@@ -420,6 +439,26 @@ public class PlayerController : MonoBehaviour
         Health -= Mathf.RoundToInt(_Damage);
         StartCoroutine(StopTakingDamage());
     }
+
+    public void TakeRecoil(Vector2 direction)
+    {
+        if (isRecoiling)
+            return;
+
+        isRecoiling = true;
+        recoilTimer = 0f;
+        rb.linearVelocity = Vector2.zero;
+
+        float horizontalDirection = Mathf.Sign(direction.x);
+
+        rb.AddForce(
+            new Vector2(
+                horizontalDirection * recoilHorizontal,
+                recoilVertical
+            ),
+            ForceMode2D.Impulse
+        );
+    }
     IEnumerator StopTakingDamage()
     {
         pState.Invincible = true;
@@ -436,7 +475,8 @@ public class PlayerController : MonoBehaviour
             Color.white;
     }
     void RestoreTimeScale()
-    {         if (restoreTime)
+    {         
+        if (restoreTime)
         {
             if (Time.timeScale < 1)
             {

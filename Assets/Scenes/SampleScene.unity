@@ -1589,6 +1589,9 @@ MonoBehaviour:
   RecoilXSpeed: 5
   RecoilYSpeed: 20
   WallRecoilForce: 1000
+  recoilLength: 0.2
+  recoilHorizontal: 15
+  recoilVertical: 12
   health: 0
   MaxHealth: 10
   BloodSpurt: {fileID: 990140022324791534, guid: df90f256abff8f24db64ab2800fa085d, type: 3}
