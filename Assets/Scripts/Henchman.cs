@@ -233,7 +233,7 @@ public class Henchman : Enemy
 
         anim.SetTrigger("Attacking");
 
-        PlayerController.Instance.TakeDamage(Damage);
+        base.Attack();
 
         StartCoroutine(AttackCooldown());
     }
