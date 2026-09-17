@@ -15,13 +15,15 @@ public class Henchman : Enemy
     protected override void Update()
     {
         base.Update();
+
         if (!isRecoiling)
         {
-            transform.position = Vector2.MoveTowards
-                (transform.position, new Vector2(PlayerController.Instance.transform.position.x, transform.position.y),
-                speed * Time.deltaTime);
+            float direction = Mathf.Sign(
+                PlayerController.Instance.transform.position.x - transform.position.x
+            );
+
+            rb.linearVelocity = new Vector2(direction * speed, rb.linearVelocity.y);
         }
-  
     }
     public override void EnemyHit(float _DamageDone, Vector2 _HitDirection, float _HitForce)
     {
